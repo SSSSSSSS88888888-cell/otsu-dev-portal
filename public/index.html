@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FDFCF7">
+<title>乙@開発 Portal - 日常を、ちょっと肯定する道具たち</title>
+<meta name="description" content="100本のWebアプリで、あなたの現実と前向きに向き合うお手伝いをします。23本公開中。">
+<meta property="og:title" content="乙@開発 Portal">
+<meta property="og:description" content="日常を、ちょっと肯定する道具たち。100本チャレンジ公式ポータル。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="乙@開発">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FDFCF7;
+  --surface: #FFFFFF;
+  --surface-2: #F5F3ED;
+  --surface-3: #ECE9E0;
+  --border: #D6D3C8;
+  --border-strong: #A8A397;
+  --text: #0A0A0A;
+  --text-2: #262626;
+  --dim: #57534E;
+  --dim-2: #78716C;
+  --primary: #0A0A0A;
+  --accent: #D97706;
+  --accent-soft: #FEF3C7;
+  --success: #047857;
+  --danger: #B91C1C;
+  --warning: #B45309;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --shadow-sm: 0 1px 0 rgba(10,10,10,0.04);
+  --shadow: 0 1px 2px rgba(10,10,10,0.04);
+  --shadow-lg: 0 8px 24px -8px rgba(10,10,10,0.12);
+  --duration: 160ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --font-sans: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-num: "JetBrains Mono", "Inter", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --tap: 48px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --surface-2: #1A1A1A;
+  --surface-3: #222222;
+  --border: #2A2A2A;
+  --border-strong: #3F3F3F;
+  --text: #FAFAFA;
+  --text-2: #E5E5E5;
+  --dim: #A3A3A3;
+  --dim-2: #737373;
+  --primary: #FAFAFA;
+  --accent: #FBBF24;
+  --accent-soft: rgba(251, 191, 36, 0.12);
+  --success: #34D399;
+  --danger: #F87171;
+  --warning: #FBBF24;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html, body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-sans); font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv11", "ss01", "ss03";
+  letter-spacing: -0.005em;
+  overscroll-behavior-y: none;
+}
+body {
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column;
+  padding-top: var(--safe-top); padding-bottom: var(--safe-bottom);
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.wrap {
+  width: 100%; max-width: 960px; margin: 0 auto;
+  padding: 0 clamp(16px, 5vw, 28px);
+}
+
+/* =========== TOPBAR =========== */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; min-height: 56px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14px; letter-spacing: -0.01em;
+}
+.brand-mark {
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  background: var(--text); color: var(--bg);
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 800; font-family: var(--font-num);
+  letter-spacing: -0.03em;
+}
+.brand-meta {
+  font-family: var(--font-mono); font-size: 10px; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-left: 2px;
+  font-weight: 500;
+}
+.nav { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 8px 14px; font-size: 13px; font-weight: 500;
+  color: var(--dim); border-radius: var(--radius);
+  transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
+}
+.nav-link:hover { color: var(--text); background: var(--surface-2); }
+.icon-btn {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: var(--radius); color: var(--dim);
+  transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn:hover { background: var(--surface-2); color: var(--text); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+/* =========== HERO =========== */
+.hero {
+  padding: clamp(48px, 12vw, 96px) 0 clamp(40px, 10vw, 72px);
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim);
+  margin-bottom: 20px;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+  font-weight: 600;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
+.hero h1 {
+  font-size: clamp(36px, 8vw, 64px);
+  font-weight: 800; letter-spacing: -0.04em;
+  line-height: 1.05; margin-bottom: 24px;
+  max-width: 18ch;
+}
+.hero h1 em {
+  font-style: normal; color: var(--accent);
+}
+.hero p {
+  font-size: clamp(15px, 3.8vw, 18px);
+  color: var(--dim); max-width: 50ch; line-height: 1.7;
+  margin-bottom: 32px;
+}
+.hero-cta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px;
+}
+
+.btn {
+  min-height: 48px; padding: 0 22px;
+  border-radius: var(--radius); font-size: 14.5px; font-weight: 600;
+  letter-spacing: -0.005em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background var(--duration) var(--ease), border-color var(--duration) var(--ease), color var(--duration) var(--ease), transform 80ms var(--ease);
+  user-select: none; -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-sans);
+}
+.btn:active { transform: scale(0.985); }
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:hover { background: var(--text-2); }
+.btn-secondary {
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface-2); border-color: var(--border-strong); }
+
+.progress-block {
+  margin-top: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  max-width: 520px;
+}
+.progress-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 10px;
+}
+.progress-label {
+  font-family: var(--font-mono); font-size: 11px; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500;
+}
+.progress-val {
+  font-family: var(--font-num); font-size: 20px; font-weight: 700;
+  color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+}
+.progress-val .total { color: var(--dim); font-weight: 500; }
+.progress-bar {
+  height: 6px; background: var(--surface-2);
+  border-radius: 3px; overflow: hidden; position: relative;
+}
+.progress-fill {
+  position: absolute; inset: 0 auto 0 0;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 800ms var(--ease);
+}
+
+/* =========== SECTION =========== */
+section { padding: clamp(48px, 10vw, 80px) 0; }
+.section-head {
+  margin-bottom: clamp(28px, 6vw, 44px);
+}
+.section-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim);
+  margin-bottom: 12px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.section-eyebrow::before {
+  content: ""; width: 18px; height: 1px; background: var(--border-strong);
+}
+.section-head h2 {
+  font-size: clamp(24px, 5.5vw, 36px);
+  font-weight: 800; letter-spacing: -0.03em; line-height: 1.15;
+  margin-bottom: 10px;
+}
+.section-head p {
+  font-size: clamp(14px, 3.6vw, 16px);
+  color: var(--dim); max-width: 52ch; line-height: 1.7;
+}
+
+/* =========== ABOUT =========== */
+.about {
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 40px);
+}
+.about-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: clamp(20px, 4vw, 32px);
+}
+.about-card h3 {
+  font-size: 16px; font-weight: 700; margin-bottom: 10px;
+  letter-spacing: -0.015em;
+}
+.about-card p {
+  font-size: 14px; color: var(--dim); line-height: 1.75;
+}
+.about-card .accent-line {
+  display: inline-block; width: 32px; height: 2px;
+  background: var(--accent); margin-bottom: 14px;
+}
+
+/* =========== CATEGORY FILTER =========== */
+.filter-row {
+  display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 8px 14px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); border-radius: 999px;
+  color: var(--dim); background: var(--surface);
+  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease), color var(--duration) var(--ease);
+  font-family: var(--font-mono); letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+}
+.filter-btn:hover { border-color: var(--border-strong); color: var(--text); }
+.filter-btn[aria-pressed="true"] {
+  background: var(--text); color: var(--bg); border-color: var(--text);
+}
+.filter-btn .count {
+  margin-left: 6px; font-family: var(--font-num); font-size: 10px;
+  opacity: 0.7;
+}
+
+/* =========== APP GRID =========== */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.app-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: border-color var(--duration) var(--ease), transform var(--duration) var(--ease);
+  position: relative;
+  min-height: 180px;
+}
+.app-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+.app-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.app-mark {
+  width: 40px; height: 40px; border-radius: var(--radius);
+  background: var(--text); color: var(--bg);
+  display: grid; place-items: center;
+  font-family: var(--font-num); font-size: 16px; font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.app-num {
+  font-family: var(--font-mono); font-size: 10px; color: var(--dim);
+  letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+}
+.app-title {
+  font-size: 15px; font-weight: 700; letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.app-desc {
+  font-size: 12.5px; color: var(--dim); line-height: 1.6;
+  flex: 1;
+}
+.app-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--dim-2); letter-spacing: 0.06em;
+  text-transform: uppercase; font-weight: 500;
+}
+.app-tag::before {
+  content: ""; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--dim-2);
+}
+.app-card[data-category="phase1"] .app-tag::before { background: var(--accent); }
+.app-card[data-category="phase2"] .app-tag::before { background: var(--text); }
+
+/* =========== FOLLOW =========== */
+.follow {
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+}
+.follow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 24px;
+}
+.follow-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  min-height: 140px;
+  transition: border-color var(--duration) var(--ease), transform var(--duration) var(--ease);
+}
+.follow-card:hover:not(.disabled) {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+.follow-card.disabled { opacity: 0.5; cursor: default; }
+.follow-platform {
+  font-family: var(--font-mono); font-size: 10px; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500;
+}
+.follow-handle {
+  font-size: 18px; font-weight: 700; letter-spacing: -0.02em;
+}
+.follow-status {
+  margin-top: auto; font-family: var(--font-mono); font-size: 11px;
+  color: var(--dim-2); letter-spacing: 0.04em;
+}
+.follow-status.live {
+  color: var(--success); font-weight: 600;
+}
+
+/* =========== FOOTER =========== */
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--dim-2); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.footer a { color: var(--dim); transition: color var(--duration) var(--ease); }
+.footer a:hover { color: var(--text); }
+
+/* =========== RESPONSIVE =========== */
+@media (max-width: 900px) {
+  .apps-grid { grid-template-columns: repeat(2, 1fr); }
+  .follow-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .follow-grid { grid-template-columns: 1fr; }
+  .nav-link { display: none; }
+}
+@media (max-width: 480px) {
+  .apps-grid { grid-template-columns: 1fr; gap: 10px; }
+  .hero h1 { font-size: clamp(30px, 9vw, 44px); }
+  .app-card { padding: 18px; min-height: 160px; }
+  .brand-meta { display: none; }
+  .btn { min-height: 52px; font-size: 14px; padding: 0 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+@media (hover: none) {
+  .app-card:hover { transform: none; }
+  .follow-card:hover:not(.disabled) { transform: none; }
+  .btn-primary:hover { background: var(--text); }
+  .btn-secondary:hover { background: var(--surface); border-color: var(--border); }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">乙</div>
+      <span>乙@開発</span>
+      <span class="brand-meta">v2026.04</span>
+    </div>
+    <nav class="nav">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#apps" class="nav-link">Apps</a>
+      <a href="#follow" class="nav-link">Follow</a>
+      <button class="icon-btn" id="themeToggle" aria-label="テーマ切替">
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow"><span class="dot"></span>100 Web Apps Challenge · 稼働中</div>
+    <h1>日常を、<br>ちょっと<em>肯定する</em><br>道具たち。</h1>
+    <p>V仮面の個人開発者「乙@開発」が作る、小さなWebアプリを集めた場所です。あなたの現実と前向きに向き合う、ささやかなお手伝いを目指しています。</p>
+    <div class="hero-cta">
+      <a href="#apps" class="btn btn-primary">
+        23本すべて見る
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+      <a href="#follow" class="btn btn-secondary">
+        フォローする
+      </a>
+    </div>
+    <div class="progress-block">
+      <div class="progress-head">
+        <span class="progress-label">Challenge Progress</span>
+        <span class="progress-val tnum"><span id="doneCount">23</span> <span class="total">/ 100</span></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:23%"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">About</div>
+      <h2>なぜ、100本作るのか。</h2>
+      <p>大きく構えた立派な1本よりも、あなたの日常の片隅に置いておける小さな道具を100個作りたい。それが、このチャレンジの素朴な出発点です。</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="accent-line"></div>
+        <h3>ビジョン</h3>
+        <p>一人でも多くの人に、現実に対して前向きな感覚を持ってほしい。現実から逃げる道具ではなく、現実と仲良くなる道具を作ることを目指しています。</p>
+      </div>
+      <div class="about-card">
+        <div class="accent-line"></div>
+        <h3>開発者</h3>
+        <p>V仮面をかぶった開発者「乙@開発（おつ@かいはつ）」。素声・低テンション・ポジティブを信条とし、金をかけないアイデアで100本を積み上げています。</p>
+      </div>
+      <div class="about-card">
+        <div class="accent-line"></div>
+        <h3>技術</h3>
+        <p>全アプリがクライアントサイド完結。単一HTMLに全部乗せる古典的な手法で、重い依存を持たない軽やかな道具を、ひとつずつ丁寧に。</p>
+      </div>
+      <div class="about-card">
+        <div class="accent-line"></div>
+        <h3>作り方</h3>
+        <p>ゼロラーニング・1画面1タスク・入力3項目以内・3秒以内に結果。敬意ある敬語と、明日にも誰かが使える実用性。それを毎回、最低限の約束として守っています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="apps">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Apps</div>
+      <h2>23本の、小さな道具たち。</h2>
+      <p>日常のちょっとした瞬間を、数字や言葉で肯定してみる実験です。どれも無料、登録なし、ブラウザで開くだけで使えます。</p>
+    </div>
+    <div class="filter-row" role="tablist">
+      <button class="filter-btn" data-filter="all" aria-pressed="true">すべて<span class="count" id="countAll">23</span></button>
+      <button class="filter-btn" data-filter="phase1" aria-pressed="false">Phase 1 · 日常系<span class="count">10</span></button>
+      <button class="filter-btn" data-filter="phase2" aria-pressed="false">Phase 2 · 仕事系<span class="count">13</span></button>
+    </div>
+    <div class="apps-grid" id="appsGrid"></div>
+  </div>
+</section>
+
+<section class="follow" id="follow">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-eyebrow">Follow</div>
+      <h2>道具が増える瞬間を、一緒に。</h2>
+      <p>新作の公開は、SNSで少しずつお知らせしています。完成品だけでなく、作っている最中の試行錯誤も。</p>
+    </div>
+    <div class="follow-grid">
+      <a href="https://x.com/otsu_dev" target="_blank" rel="noopener" class="follow-card">
+        <div class="follow-platform">X (Twitter)</div>
+        <div class="follow-handle">@otsu_dev</div>
+        <div class="follow-status live">● 稼働中</div>
+      </a>
+      <div class="follow-card disabled">
+        <div class="follow-platform">TikTok</div>
+        <div class="follow-handle">@otsu_dev</div>
+        <div class="follow-status">近日公開</div>
+      </div>
+      <div class="follow-card disabled">
+        <div class="follow-platform">YouTube</div>
+        <div class="follow-handle">@otsu_dev</div>
+        <div class="follow-status">近日公開</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>© 2026 乙@開発</span>
+    <span><a href="https://x.com/otsu_dev" target="_blank" rel="noopener">@otsu_dev</a> · 100 Web Apps Challenge</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const APPS = [
+    // Phase 1
+    { n: 1, title: '何もしないボタン', mark: '無', desc: '押すと、何もしないボタン。ただそれだけの道具です。', url: 'https://nothing-button.vercel.app', cat: 'phase1' },
+    { n: 2, title: '存在証明サイト', mark: '証', desc: 'あなたがここにいたことを、そっと記録します。', url: 'https://proof-of-existence-seven.vercel.app', cat: 'phase1' },
+    { n: 3, title: '言い訳ジェネレーター', mark: '訳', desc: '困ったとき、ちょっと笑える言い訳を提案します。', url: 'https://excuse-generator-inky.vercel.app', cat: 'phase1' },
+    { n: 4, title: '全人類じゃんけん大会', mark: '拳', desc: '世界中の誰かと、タイミング一発勝負。', url: 'https://global-janken.vercel.app', cat: 'phase1' },
+    { n: 5, title: '人生ガチャ', mark: '運', desc: '今日の運命を、もう一度回してみる。', url: 'https://life-gacha-topaz.vercel.app', cat: 'phase1' },
+    { n: 6, title: 'おばあちゃんの知恵袋AI', mark: '婆', desc: '迷ったときに、優しい一言を届けてくれます。', url: 'https://grandma-wisdom.vercel.app', cat: 'phase1' },
+    { n: 7, title: '人生のプログレスバー', mark: '命', desc: 'あなたの今日を、まだ残っている割合で眺める。', url: 'https://life-progress-bar-neon.vercel.app', cat: 'phase1' },
+    { n: 8, title: '世界同時ため息', mark: '息', desc: '今この瞬間、同じ気持ちの人がいます。', url: 'https://global-sigh.vercel.app', cat: 'phase1' },
+    { n: 9, title: 'Wi-Fi名採点', mark: 'Wi', desc: 'あなたのWi-Fi名、実はすごくセンスあります。', url: 'https://wifi-scorer.vercel.app', cat: 'phase1' },
+    { n: 10, title: 'AIポエム墓標', mark: '詩', desc: '失った何かに、静かな詩を捧げます。', url: 'https://poem-tombstone.vercel.app', cat: 'phase1' },
+    // Phase 2
+    { n: 12, title: '会議コスト計算機', mark: '議', desc: '時間と人件費で、この会議の価値を見つめ直す。', url: 'https://meeting-cost-calculator-drab.vercel.app', cat: 'phase2' },
+    { n: 13, title: '時給カウンター', mark: '¥', desc: 'いま、いくら稼いでる？秒刻みで積み上がります。', url: 'https://earning-tracker-rouge.vercel.app', cat: 'phase2' },
+    { n: 14, title: '定時までカウントダウン', mark: '時', desc: 'あと¥◯◯稼げば、帰れる。残り時間を金額で。', url: 'https://clock-out-countdown.vercel.app', cat: 'phase2' },
+    { n: 15, title: '年収リアルタイム時計', mark: '年', desc: '今年1月からの累計、あなたはもうこんなに稼いだ。', url: 'https://annual-income-clock.vercel.app', cat: 'phase2' },
+    { n: 16, title: '給料日カウントダウン', mark: '給', desc: '次の給料日まで、あと何日。その喜びを可視化。', url: 'https://payday-countdown.vercel.app', cat: 'phase2' },
+    { n: 17, title: '残業代リアルタイム計算機', mark: '残', desc: '残業代が秒刻みで積み上がる、小さな慰めの道具。', url: 'https://overtime-pay-tracker.vercel.app', cat: 'phase2' },
+    { n: 18, title: '通勤時間マネタイザー', mark: '通', desc: '通勤時間を、年間いくら分の労働に換算してみる。', url: 'https://commute-monetizer.vercel.app', cat: 'phase2' },
+    { n: 19, title: '次の休みまでカウントダウン', mark: '休', desc: '土日祝日まで、残り営業時間を秒刻みで。', url: 'https://next-holiday-countdown.vercel.app', cat: 'phase2' },
+    { n: 20, title: '今日も働いて偉いAI', mark: '偉', desc: 'ボタンひとつで、今日のあなたに一言。', url: 'https://work-hero-ai.vercel.app', cat: 'phase2' },
+    { n: 21, title: '有給残量メーター', mark: '有', desc: '残り有給を、金額換算と消化率で可視化。', url: 'https://paid-leave-meter.vercel.app', cat: 'phase2' },
+    { n: 22, title: 'ボーナスカウントダウン', mark: 'B', desc: '夏・冬ボーナスまで残り日数＋想定入金額。', url: 'https://bonus-countdown.vercel.app', cat: 'phase2' },
+    { n: 23, title: '退職金予測シミュレーター', mark: '退', desc: '今辞めたら、退職金はいくら？自社モデルで概算。', url: 'https://retirement-benefit-simulator.vercel.app', cat: 'phase2' },
+    { n: 24, title: '仕事スタミナバー', mark: 'HP', desc: '今日の残りHP、あと何％？退社まで一緒に。', url: 'https://work-stamina-bar.vercel.app', cat: 'phase2' },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const grid = $('appsGrid');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const doneCount = $('doneCount');
+  const progressFill = $('progressFill');
+
+  // ===== Theme =====
+  const applyTheme = (t) => {
+    document.documentElement.setAttribute('data-theme', t);
+    $('iconSun').hidden = t === 'dark';
+    $('iconMoon').hidden = t !== 'dark';
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#0A0A0A' : '#FDFCF7');
+  };
+  const savedTheme = localStorage.getItem('odp-theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  applyTheme(savedTheme);
+  $('themeToggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('odp-theme', next);
+    applyTheme(next);
+  });
+
+  // ===== Render =====
+  function render(filter = 'all') {
+    const list = filter === 'all' ? APPS : APPS.filter(a => a.cat === filter);
+    grid.innerHTML = list.map(a => {
+      const tag = a.cat === 'phase1' ? 'Phase 1 · 日常系' : 'Phase 2 · 仕事系';
+      return `<a href="${a.url}" target="_blank" rel="noopener" class="app-card" data-category="${a.cat}">
+        <div class="app-card-head">
+          <div class="app-mark">${a.mark}</div>
+          <span class="app-num">#${String(a.n).padStart(2, '0')}</span>
+        </div>
+        <h3 class="app-title">${a.title}</h3>
+        <p class="app-desc">${a.desc}</p>
+        <span class="app-tag">${tag}</span>
+      </a>`;
+    }).join('');
+  }
+
+  // ===== Filter =====
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      render(btn.dataset.filter);
+    });
+  });
+
+  render('all');
+
+  // ===== Progress =====
+  doneCount.textContent = APPS.length;
+  progressFill.style.width = APPS.length + '%';
+})();
+</script>
+</body>
+</html>

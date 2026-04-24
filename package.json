@@ -1,0 +1,9 @@
+{
+  "name": "otsu-dev-portal",
+  "version": "1.0.0",
+  "description": "乙@開発 Portal - 100本チャレンジ公式ポータル",
+  "scripts": {
+    "dev": "npx serve public",
+    "start": "npx serve public"
+  }
+}
